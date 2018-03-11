@@ -158,8 +158,4 @@ above.
 
 ## Known Bugs
 
-* For some reason Markdig is not eating and ignoring the YAML front matter like it
-  should (even with `UseYamlFrontMatter` extension explicitly included in the pipeline
-  build), and instead is excreting the YAML into a `<p>` tag in the output HTML. I
-  coded around that for now (see `ParseYAML`, which returns the remaining Markdown
-  after the front matter, along with the metadata collection).
+None at this time.
