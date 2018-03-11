@@ -130,6 +130,10 @@ above.
   the processor ("Where the rubber meets the road"). The method signature should be
   `void ProcessorName(DirectoryToProcess d)`.
 
+* **AppConfiguration:DirectoriesToProcess:Processors:Exclusions** - array of processor-specific
+  filename patterns to be used to exclude files from processing, e.g., for building a `sitemap.xml`
+  file you may want to `"Exceptions" : [ "401.html", "403.html", "404.html", "500.html" ]`.
+
 * **AppConfiguration:DirectoriesToProcess:Wildcard** - array of wildcards to use to select
   files in the input directory to process, e.g., `"Wildcard": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`
 
@@ -144,12 +148,13 @@ above.
   For other processors in the futue, it could be used for other things (like adding
   metadata to generated images).
 
+* **AppConfiguration:DirectoriesToProcess:TargetURL** - optional string containing the target
+  URL the files will be served from, e.g., `"TargetURL" : "https://foo.com"`.
+
 ## TODO
 
 * Break out the processors into their own assembly. It's a bit hokey having them all
   be a part of the static `Program.cs` class now (but it works!)
-
-* Write processor to create `sitemap.xml` file.
 
 * Write processor to create RSS or ATOM feed.
 

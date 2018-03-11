@@ -56,7 +56,7 @@ namespace swingor
                 var t = a.GetType(d.Class);
                 var o = Activator.CreateInstance(t);
                 var m = t.GetMethod(d.Method);
-                m.Invoke(o, new object[] { directory });
+                m.Invoke(o, new object[] { directory, d.Exceptions });
             });
         }
 
@@ -64,7 +64,8 @@ namespace swingor
         // each other.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        public static void ProcessMarkdownFiles(DirectoryToProcess directory)
+        // exceptions: processor-specific list of patterns of files to ignore.
+        public static void ProcessMarkdownFiles(DirectoryToProcess directory, List<string> exceptions)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
 
@@ -104,7 +105,8 @@ namespace swingor
         // in parallel and hence should be autonomous from each other.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        public static void ProcessStaticFiles(DirectoryToProcess directory)
+        // exceptions: processor-specific list of patterns of files to ignore.
+        public static void ProcessStaticFiles(DirectoryToProcess directory, List<string> exceptions)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
 

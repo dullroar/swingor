@@ -35,5 +35,7 @@ namespace swingor
         // Files to "postpend" (append) to the output or otherwise pass to the processor
         // after processing each file.
         public List<string> Postpends { get; set; }
+        // The base URL that the files will ultimately be hosted under, if any.
+        public string TargetURL { get; set; }
     }
 }
