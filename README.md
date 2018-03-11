@@ -149,22 +149,19 @@ above.
   integer of the number of files to process (in other words, stop **after** this many files are
   processed). Useful for things like RSS feeds.
 
-* **AppConfiguration:DirectoriesToProcess:TargetURL** - optional string containing the target
-  URL the files will be served from, e.g., `"TargetURL" : "https://foo.com"`.
-
 * **AppConfiguration:DirectoriesToProcess:SiteDescription** - optional string to use for containing
   a site description (for RSS feeds, etc.)
 
 * **AppConfiguration:DirectoriesToProcess:SiteTitle** - optional string to use for containing a site
   title (for RSS feeds, etc.)
 
+* **AppConfiguration:DirectoriesToProcess:TargetURL** - optional string containing the target
+  URL the files will be served from, e.g., `"TargetURL" : "https://foo.com"`.
+
 * **AppConfiguration:DirectoriesToProcess:Wildcard** - array of wildcards to use to select
   files in the input directory to process, e.g., `"Wildcard": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`
 
 ## TODO
-
-* Break out the processors into their own assembly. It's a bit hokey having them all
-  be a part of the static `Program.cs` class now (but it works!)
 
 * Write processor to update image metadata (copyright, etc.) Could be tricky given the
   current state of graphics file processing in .NET Core.

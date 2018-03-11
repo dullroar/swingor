@@ -1,4 +1,4 @@
-using swingor;
+using swingor_processors;
 using System;
 using Xunit;
 
@@ -22,7 +22,7 @@ title: This is a title
 date: March 10, 2018
 ...
 The rest of the markdown goes here.";
-            var meta = swingor.Program.ParseYAML(md, "Elmer Fudd", "Default Title");
+            var meta = BasicProcessors.ParseYAML(md, "Elmer Fudd", "Default Title");
             Assert.Equal("Elmer Fudd", meta["author"]);
             Assert.Equal("", meta["subtitle"]);
             Assert.Equal(DateTime.Now.Year.ToString(), meta["copyright"]);
@@ -39,7 +39,7 @@ date: March 10, 2017
 copyright: 2017
 ...
 The rest of the markdown goes here.";
-            var meta = swingor.Program.ParseYAML(md, "Elmer Fudd", "Default Title");
+            var meta = BasicProcessors.ParseYAML(md, "Elmer Fudd", "Default Title");
             Assert.Equal("This is a title", meta["title"]);
             Assert.Equal("This is a subtitle", meta["subtitle"]);
             Assert.Equal("Daffy Duck", meta["author"]);

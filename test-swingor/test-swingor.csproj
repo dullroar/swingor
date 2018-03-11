@@ -16,6 +16,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\swingor\swingor.csproj" />
+    <ProjectReference Include="..\swingor-processors\swingor-processors.csproj" />
+    <ProjectReference Include="..\swingor-rss\swingor-rss.csproj" />
+    <ProjectReference Include="..\swingor-sitemap\swingor-sitemap.csproj" />
   </ItemGroup>
 
   <ItemGroup>

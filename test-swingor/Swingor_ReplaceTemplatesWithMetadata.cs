@@ -1,4 +1,4 @@
-using swingor;
+using swingor_processors;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -31,7 +31,7 @@ namespace test_swingor
 <p>{{author}}</p>
 The rest of the page goes here.
 </body>");
-            swingor.Program.ReplaceTemplatesWithMetadata(html, Meta);
+            BasicProcessors.ReplaceTemplatesWithMetadata(html, Meta);
             Assert.Contains("<h1>This is a title</h1>", html.ToString());
             Assert.Contains("<p>Elmer Fudd</p>", html.ToString());
         }
