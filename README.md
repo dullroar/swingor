@@ -1,18 +1,20 @@
 # swingor - Static Website INterpreter and GeneratOR
 
 My own take at creating a static web site from Markdown files using parallel processing.
-A replacement for my current approach of using Pandoc and GNU make. But in reality, this
-is more than that. It is a way of invoking parallelized processes on arbitrary directories,
-which each directory being able to have a series of processors that will be executed in
-order on that directory. Note that internally each processor can also be parallelized if
-it fits what is being done.
+But in reality, this is more than that. It is a way of invoking parallelized processes
+on arbitrary directories, which each directory being able to have a series of processors
+that will be executed in order on that directory. Note that internally each processor
+can also be parallelized if it fits what is being done.
+
+Written in C# using .NET Core. Built and tested on Linux, but should run
+anywhere .NET Core is supported.
 
 Right now, the processing is pretty simple - Markdown files get processed to HTML,
 everything else is flat copied to the output location. But by having the pipeline processors
 in collections all of the following is possible:
 
 * A series of Markdown files gets processed to HTML, then a second processor creates a
-  sitemap, a third creates the ATOM feed, etc.
+  sitemap, a third creates the ATOM feed, etc. This is all implemented.
 
 * A series of pictures gets processed for uniform resizing (as an example), then copied
   to an output directory.
@@ -24,17 +26,42 @@ in collections all of the following is possible:
 within that each processor can also process the files in parallel, or not. The processors
 for a given directory type are processed in order to make a sort of pipeline. So, for the
 first example above, the Markdown processor already processes all Markdown files to HTML
-in parallel (since they are all independent of each other), but the proposed sitemap and
-ATOM processors that follow it would each process the files in order, because they are
+in parallel (since they are all independent of each other), but the sitemap and RSS
+processors that follow it each process the files in order, because they are
 writing to a single output file as the result of their processing. Meanwhile, the images,
 CSS, scripts, static resources are also all getting processed in parallel with the Markdown
 files, and with each other.
 
-See the default processor implementations, `ProcessMarkdownFiles` and `ProcessStaticFiles`
-for details.
+Adding directories and processors to those directories is as easy as updating the
+`appsettings.json` file. See the `Configuration` section below for details. Note that
+the processors can be located in any assembly, and are defined by a method signature of
+`public static void ProcessorName(DirectoryToProcess directory, List<string> exclusions, int? stopAfter)`.
+The `stopAfter` parameter is optional.
 
-Created by Jim Lehmer in C# using .NET Core. Written and tested on Linux, but should run
-anywhere .NET Core is supported. Licensed under the BSD 2-Clause "simplified" license.
+See the default processor implementations for details:
+
+* `BasicProcessors.ProcessMarkdownFiles` - processes Markdown files and produces HTML output
+  files.
+  
+* `BasicProcessors.ProcessStaticFiles` - processes any "static" input files by copying them
+  to the output directory specified.
+
+* `RSS.ProcessRSSFeed` - processes Markdown files and produces an RSS feed for the resulting
+  HTML files.
+
+* `Sitemap.ProcessSitemap` - process HTML files and produces a `sitemap.xml` file.
+
+In addition, each processor can be passed an array of "prepends" and "postpends," which are
+files meant to be processed before and after each input file, respectively. For example, in
+the `ProcessMarkdownFiles` processor, they are used to specify files holding HTML snippets to
+be added to each HTML file produced. Since they are processor specific, if a processor is
+passed these and doesn't know what to do with them, they will be ignored.
+
+Processors can also be passed an array of "exclusions," which are input files or file patterns
+that should be ignored. Their meaning is defined by each processor. Similarly, if a processor
+is passed exclusions and doesn't know what to do with them, they will be ignored.
+
+## Dependencies
 
 Uses the following non-Microsoft packages:
 
@@ -143,7 +170,8 @@ above.
 
 * **AppConfiguration:DirectoriesToProcess:Processors:Method** - the method that implements
   the processor ("Where the rubber meets the road"). The method signature should be
-  `void ProcessorName(DirectoryToProcess d)`.
+  `public static void ProcessorName(DirectoryToProcess directory, List<string> exclusions, int? stopAfter)`.
+  The `stopAfter` parameter is optional.
 
 * **AppConfiguration:DirectoriesToProcess:Processors:StopAfter** - optional processor-specific
   integer of the number of files to process (in other words, stop **after** this many files are

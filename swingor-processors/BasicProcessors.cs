@@ -17,8 +17,8 @@ namespace swingor_processors
         // each other.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        // exceptions: processor-specific list of patterns of files to ignore.
-        public static void ProcessMarkdownFiles(DirectoryToProcess directory, List<string> exceptions)
+        // exclusions: processor-specific list of patterns of files to ignore.
+        public static void ProcessMarkdownFiles(DirectoryToProcess directory, List<string> exclusions)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
 
@@ -29,13 +29,15 @@ namespace swingor_processors
 
                 Parallel.ForEach(directory.Wildcard, wc =>
                 {
-                    Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories), inputFileName =>
+                    Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories)
+                                              .Except(exclusions.Select(e => Path.Combine(normalizedPath, e))), inputFileName =>
                     {
                         var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
                         var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
                         Directory.CreateDirectory(outputDirectory);
                         var outputFileName = Path.Combine(outputDirectory, $"{Path.GetFileNameWithoutExtension(inputFileName)}.html");
 
+                        // Only process file if the output file doesn't exist or exists and is older than the input file.
                         if ((File.Exists(outputFileName) &&
                             File.GetLastWriteTimeUtc(outputFileName) < File.GetLastWriteTimeUtc(inputFileName)) ||
                             !File.Exists(outputFileName))
@@ -58,8 +60,8 @@ namespace swingor_processors
         // in parallel and hence should be autonomous from each other.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        // exceptions: processor-specific list of patterns of files to ignore.
-        public static void ProcessStaticFiles(DirectoryToProcess directory, List<string> exceptions)
+        // exclusions: processor-specific list of patterns of files to ignore.
+        public static void ProcessStaticFiles(DirectoryToProcess directory, List<string> exclusions)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
 
@@ -69,13 +71,15 @@ namespace swingor_processors
 
                 Parallel.ForEach(directory.Wildcard, wc =>
                 {
-                    Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories), inputFileName =>
+                    Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories)
+                                              .Except(exclusions.Select(e => Path.Combine(normalizedPath, e))), inputFileName =>
                     {
                         var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
                         var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
                         Directory.CreateDirectory(outputDirectory);
                         var outputFileName = Path.Combine(outputDirectory, Path.GetFileName(inputFileName));
 
+                        // Only process file if the output file doesn't exist or exists and is older than the input file.
                         if ((File.Exists(outputFileName) &&
                             File.GetLastWriteTimeUtc(outputFileName) < File.GetLastWriteTimeUtc(inputFileName)) ||
                             !File.Exists(outputFileName))

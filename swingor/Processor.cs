@@ -7,7 +7,7 @@ namespace swingor
     {
         public Processor()
         {
-            Exceptions = new List<string>();
+            Exclusions = new List<string>();
         }
         
         // Path to assembly DLL to load.
@@ -17,7 +17,7 @@ namespace swingor
         // Method to invoke.
         public string Method { get; set; }
         // File names or patterns to ignore.
-        public List<string> Exceptions { get; set; }
+        public List<string> Exclusions { get; set; }
         // Number of files to process.
         public int? StopAfter { get; set; }
     }

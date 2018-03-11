@@ -13,8 +13,8 @@ namespace swingor_sitemap
         // needs to go after the processor that creates the HTML files.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        // exceptions: processor-specific list of patterns of files to ignore.
-        public static void ProcessSitemap(DirectoryToProcess directory, List<string> exceptions)
+        // exclusions: processor-specific list of patterns of files to ignore.
+        public static void ProcessSitemap(DirectoryToProcess directory, List<string> exclusions)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
 
@@ -27,7 +27,7 @@ namespace swingor_sitemap
 ");
 
                 Directory.EnumerateFiles(normalizedPath, "*.htm?", SearchOption.AllDirectories)
-                .Except(exceptions.Select(e => Path.Combine(normalizedPath, e)))
+                .Except(exclusions.Select(e => Path.Combine(normalizedPath, e)))
                 .OrderBy(p => p)
                 .ToList()
                 .ForEach(htmlFileName =>
