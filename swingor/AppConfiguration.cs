@@ -14,6 +14,7 @@ namespace swingor
         public bool Clean { get; set; }
         // Run web server for testing?
         public bool Serve { get; set; }
+        // Information on each directory to be processed.
         public List<DirectoryToProcess> DirectoriesToProcess { get; set; }
     }
 }

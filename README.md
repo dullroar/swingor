@@ -117,49 +117,59 @@ above.
 
 * **AppConfiguration:DirectoriesToProcess:OutputPath** - path to output directory.
 
-* **AppConfiguration:DirectoriesToProcess:Processors** - array of processors to invoke, in
-  order, for a given input directory. See `Processor.cs`.
-
-* **AppConfiguration:DirectoriesToProcess:Processors:DLL** - path to DLL of assembly
-  containing processor.
-
-* **AppConfiguration:DirectoriesToProcess:Processors:Class** - class in assembly
-  containing processor.
-
-* **AppConfiguration:DirectoriesToProcess:Processors:Method** - the method that implements
-  the processor ("Where the rubber meets the road"). The method signature should be
-  `void ProcessorName(DirectoryToProcess d)`.
-
-* **AppConfiguration:DirectoriesToProcess:Processors:Exclusions** - array of processor-specific
-  filename patterns to be used to exclude files from processing, e.g., for building a `sitemap.xml`
-  file you may want to `"Exceptions" : [ "401.html", "403.html", "404.html", "500.html" ]`.
-
-* **AppConfiguration:DirectoriesToProcess:Wildcard** - array of wildcards to use to select
-  files in the input directory to process, e.g., `"Wildcard": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`
-
-* **AppConfiguration:DirectoriesToProcess:Prepends** - an array of file names to be
-  concatenated before the generated file, in order. For Markdown, this is used to define things
-  like contents of the `<head>` element. For other processors in the future, it could
-  be used for other things (like prepending a copyright comment to every script file).
-
 * **AppConfiguration:DirectoriesToProcess:Postpends** - an array of file names to be
   concatenated after the generated file, in order, after the rest of the contents. For Markdown,
   this is used to define things like the `<footer>` element, script blocks and the like.
   For other processors in the futue, it could be used for other things (like adding
   metadata to generated images).
 
+* **AppConfiguration:DirectoriesToProcess:Prepends** - an array of file names to be
+  concatenated before the generated file, in order. For Markdown, this is used to define things
+  like contents of the `<head>` element. For other processors in the future, it could
+  be used for other things (like prepending a copyright comment to every script file).
+
+* **AppConfiguration:DirectoriesToProcess:Processors** - array of processors to invoke, in
+  order, for a given input directory. See `Processor.cs`.
+
+* **AppConfiguration:DirectoriesToProcess:Processors:Class** - class in assembly
+  containing processor.
+
+* **AppConfiguration:DirectoriesToProcess:Processors:DLL** - path to DLL of assembly
+  containing processor.
+
+* **AppConfiguration:DirectoriesToProcess:Processors:Exclusions** - array of processor-specific
+  filename patterns to be used to exclude files from processing, e.g., for building a `sitemap.xml`
+  file you may want to `"Exceptions" : [ "401.html", "403.html", "404.html", "500.html" ]`.
+
+* **AppConfiguration:DirectoriesToProcess:Processors:Method** - the method that implements
+  the processor ("Where the rubber meets the road"). The method signature should be
+  `void ProcessorName(DirectoryToProcess d)`.
+
+* **AppConfiguration:DirectoriesToProcess:Processors:StopAfter** - optional processor-specific
+  integer of the number of files to process (in other words, stop **after** this many files are
+  processed). Useful for things like RSS feeds.
+
 * **AppConfiguration:DirectoriesToProcess:TargetURL** - optional string containing the target
   URL the files will be served from, e.g., `"TargetURL" : "https://foo.com"`.
+
+* **AppConfiguration:DirectoriesToProcess:SiteDescription** - optional string to use for containing
+  a site description (for RSS feeds, etc.)
+
+* **AppConfiguration:DirectoriesToProcess:SiteTitle** - optional string to use for containing a site
+  title (for RSS feeds, etc.)
+
+* **AppConfiguration:DirectoriesToProcess:Wildcard** - array of wildcards to use to select
+  files in the input directory to process, e.g., `"Wildcard": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`
 
 ## TODO
 
 * Break out the processors into their own assembly. It's a bit hokey having them all
   be a part of the static `Program.cs` class now (but it works!)
 
-* Write processor to create RSS or ATOM feed.
-
 * Write processor to update image metadata (copyright, etc.) Could be tricky given the
   current state of graphics file processing in .NET Core.
+
+* Move Prepends and Postpends to be processor-specific configuration settings.
 
 ## Known Bugs
 

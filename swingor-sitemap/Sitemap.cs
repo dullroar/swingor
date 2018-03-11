@@ -26,7 +26,7 @@ namespace swingor_sitemap
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
 ");
 
-                Directory.EnumerateFiles(normalizedPath, "*.htm*", SearchOption.AllDirectories)
+                Directory.EnumerateFiles(normalizedPath, "*.htm?", SearchOption.AllDirectories)
                 .Except(exceptions.Select(e => Path.Combine(normalizedPath, e)))
                 .OrderBy(p => p)
                 .ToList()

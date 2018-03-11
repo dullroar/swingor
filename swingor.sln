@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-swingor", "test-swingo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "swingor-sitemap", "swingor-sitemap\swingor-sitemap.csproj", "{779A57F9-551B-4A6D-9223-22C6256C9566}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "swingor-rss", "swingor-rss\swingor-rss.csproj", "{603BFB71-D3D0-40E0-A49C-C9F4983314DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{779A57F9-551B-4A6D-9223-22C6256C9566}.Release|x64.Build.0 = Release|x64
 		{779A57F9-551B-4A6D-9223-22C6256C9566}.Release|x86.ActiveCfg = Release|x86
 		{779A57F9-551B-4A6D-9223-22C6256C9566}.Release|x86.Build.0 = Release|x86
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Debug|x64.ActiveCfg = Debug|x64
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Debug|x64.Build.0 = Debug|x64
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Debug|x86.ActiveCfg = Debug|x86
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Debug|x86.Build.0 = Debug|x86
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Release|x64.ActiveCfg = Release|x64
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Release|x64.Build.0 = Release|x64
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Release|x86.ActiveCfg = Release|x86
+		{603BFB71-D3D0-40E0-A49C-C9F4983314DD}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 EndGlobal

@@ -37,5 +37,9 @@ namespace swingor
         public List<string> Postpends { get; set; }
         // The base URL that the files will ultimately be hosted under, if any.
         public string TargetURL { get; set; }
+        // The title of the site (something for the browser tab).
+        public string SiteTitle { get; set; }
+        // Site description (for RSS feeds, etc.)
+        public string SiteDescription { get; set; }
     }
 }

@@ -56,7 +56,10 @@ namespace swingor
                 var t = a.GetType(d.Class);
                 var o = Activator.CreateInstance(t);
                 var m = t.GetMethod(d.Method);
-                m.Invoke(o, new object[] { directory, d.Exceptions });
+                var p = d.StopAfter.HasValue && d.StopAfter.Value > 0 ?
+                        new object[] { directory, d.Exceptions, d.StopAfter.Value } :
+                        new object[] { directory, d.Exceptions };
+                m.Invoke(o, p);
             });
         }
 
