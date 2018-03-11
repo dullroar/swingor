@@ -71,29 +71,31 @@ namespace swingor
             if (Directory.Exists(directory.InputPath))
             {
                 var normalizedPath = Path.GetFullPath(directory.InputPath);
-                // Note: At this time, the YamlFrontMatter extension doesn't seem to be working.
                 var pipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().UseAdvancedExtensions().Build();
 
-                Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, directory.Wildcard, SearchOption.AllDirectories), inputFileName =>
+                Parallel.ForEach(directory.Wildcard, wc =>
                 {
-                    var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
-                    var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
-                    Directory.CreateDirectory(outputDirectory);
-                    var outputFileName = Path.Combine(outputDirectory, $"{Path.GetFileNameWithoutExtension(inputFileName)}.html");
-
-                    if ((File.Exists(outputFileName) &&
-                         File.GetLastWriteTimeUtc(outputFileName) < File.GetLastWriteTimeUtc(inputFileName)) ||
-                        !File.Exists(outputFileName))
+                    Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories), inputFileName =>
                     {
-                        var outputText = new StringBuilder();
-                        directory.Prepends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
-                        var fileText = File.ReadAllText(inputFileName);
-                        (var strippedText, var meta) = ParseYAML(fileText, directory.DefaultAuthor, directory.DefaultTitle);
-                        outputText.Append(Markdown.ToHtml(strippedText));
-                        directory.Postpends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
-                        ReplaceTemplatesWithMetadata(outputText, meta);
-                        File.WriteAllText(outputFileName, outputText.ToString());
-                    }
+                        var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
+                        var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
+                        Directory.CreateDirectory(outputDirectory);
+                        var outputFileName = Path.Combine(outputDirectory, $"{Path.GetFileNameWithoutExtension(inputFileName)}.html");
+
+                        if ((File.Exists(outputFileName) &&
+                            File.GetLastWriteTimeUtc(outputFileName) < File.GetLastWriteTimeUtc(inputFileName)) ||
+                            !File.Exists(outputFileName))
+                        {
+                            var outputText = new StringBuilder();
+                            directory.Prepends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
+                            var fileText = File.ReadAllText(inputFileName);
+                            var meta = ParseYAML(fileText, directory.DefaultAuthor, directory.DefaultTitle);
+                            outputText.Append(Markdown.ToHtml(fileText, pipeline));
+                            directory.Postpends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
+                            ReplaceTemplatesWithMetadata(outputText, meta);
+                            File.WriteAllText(outputFileName, outputText.ToString());
+                        }
+                    });
                 });
             }
         }
@@ -110,19 +112,22 @@ namespace swingor
             {
                 var normalizedPath = Path.GetFullPath(directory.InputPath);
 
-                Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, directory.Wildcard, SearchOption.AllDirectories), inputFileName =>
+                Parallel.ForEach(directory.Wildcard, wc =>
                 {
-                    var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
-                    var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
-                    Directory.CreateDirectory(outputDirectory);
-                    var outputFileName = Path.Combine(outputDirectory, Path.GetFileName(inputFileName));
-
-                    if ((File.Exists(outputFileName) &&
-                         File.GetLastWriteTimeUtc(outputFileName) < File.GetLastWriteTimeUtc(inputFileName)) ||
-                        !File.Exists(outputFileName))
+                    Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories), inputFileName =>
                     {
-                        File.Copy(inputFileName, outputFileName, true);
-                    }
+                        var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
+                        var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
+                        Directory.CreateDirectory(outputDirectory);
+                        var outputFileName = Path.Combine(outputDirectory, Path.GetFileName(inputFileName));
+
+                        if ((File.Exists(outputFileName) &&
+                            File.GetLastWriteTimeUtc(outputFileName) < File.GetLastWriteTimeUtc(inputFileName)) ||
+                            !File.Exists(outputFileName))
+                        {
+                            File.Copy(inputFileName, outputFileName, true);
+                        }
+                    });
                 });
             }
         }
@@ -206,7 +211,7 @@ namespace swingor
         // defaultTitle: value to assign to "title" key if one not found in YAML.
         // Returns dictionary of key/value pairs. For some "well-known" keys, if
         // none is found, reasonable substitutes are used.
-        public static (string, Dictionary<string, string>) ParseYAML(string input, string defaultAuthor, string defaultTitle)
+        public static Dictionary<string, string> ParseYAML(string input, string defaultAuthor, string defaultTitle)
         {
             var meta = new Dictionary<string, string>()
             {
@@ -216,7 +221,6 @@ namespace swingor
                 { "date", DateTime.Now.ToString("dddd, MMMM dd, yyyy") },
                 { "copyright", DateTime.Now.ToString("yyyy")}
             };
-            var output = "";
 
             using (var rdr = new StringReader(input))
             {
@@ -232,11 +236,9 @@ namespace swingor
                         meta[parts[0].Trim()] = parts[1].Trim();
                     }
                 }
-
-                output = rdr.ReadToEnd();
             }
 
-            return (output, meta);
+            return meta;
         }
 
         // Make sure all output directories exist.

@@ -12,7 +12,7 @@ namespace swingor
             InputPath = ".";
             OutputPath = ".";
             Processors = new List<Processor>();
-            Wildcard = "*.*";
+            Wildcard = new List<string>();
             Prepends = new List<string>();
             Postpends = new List<string>();
         }
@@ -27,8 +27,8 @@ namespace swingor
         public string OutputPath { get; set; }
         // The method name to invoke for processing the directory.
         public List<Processor> Processors { get; set; }
-        // The wildcard to use on files in the input directory. Defaults to "*.*".
-        public string Wildcard { get; set; }
+        // The wildcard to use on files in the input directory.
+        public List<string> Wildcard { get; set; }
         // Files to "prepend" to the output or otherwise pass to the processor before
         // processing each file.
         public List<string> Prepends { get; set; }

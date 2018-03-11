@@ -130,8 +130,8 @@ above.
   the processor ("Where the rubber meets the road"). The method signature should be
   `void ProcessorName(DirectoryToProcess d)`.
 
-* **AppConfiguration:DirectoriesToProcess:Wildcard** - the wildcard to use to select
-  files in the input directory to process.
+* **AppConfiguration:DirectoriesToProcess:Wildcard** - array of wildcards to use to select
+  files in the input directory to process, e.g., `"Wildcard": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`
 
 * **AppConfiguration:DirectoriesToProcess:Prepends** - an array of file names to be
   concatenated before the generated file, in order. For Markdown, this is used to define things
@@ -156,16 +156,10 @@ above.
 * Write processor to update image metadata (copyright, etc.) Could be tricky given the
   current state of graphics file processing in .NET Core.
 
-* Make the wildcards in the `DirectoriesToProcess` setting section an array, to allow
-  multiple wildcards to be processed. Right now, image files all have to come from
-  a separate image directory or directories. This would allow images to be intermingled
-  with other files, and then specified with something like:
-  `"Wildcard": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`.
-
 ## Known Bugs
 
- * For some reason Markdig is not eating and ignoring the YAML front matter like it
-   should (even with `UseYamlFrontMatter` extension explicitly included in the pipeline
-   build), and instead is excreting the YAML into a `<p>` tag in the output HTML. I
-   coded around that for now (see `ParseYAML`, which returns the remaining Markdown
-   after the front matter, along with the metadata collection).
+* For some reason Markdig is not eating and ignoring the YAML front matter like it
+  should (even with `UseYamlFrontMatter` extension explicitly included in the pipeline
+  build), and instead is excreting the YAML into a `<p>` tag in the output HTML. I
+  coded around that for now (see `ParseYAML`, which returns the remaining Markdown
+  after the front matter, along with the metadata collection).
