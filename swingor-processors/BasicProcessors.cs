@@ -18,9 +18,13 @@ namespace swingor_processors
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
         // exclusions: processor-specific list of patterns of files to ignore.
-        public static void ProcessMarkdownFiles(DirectoryToProcess directory, List<string> exclusions)
+        public static void ProcessMarkdownFiles(DirectoryToProcess directory)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
+            var exclusions = (from p in directory.Processors
+                              where p.Class == $"{typeof(BasicProcessors)}" &&
+                                    p.Method == nameof(ProcessMarkdownFiles)
+                              select p.Exclusions).FirstOrDefault() ?? new List<string>();
 
             if (Directory.Exists(directory.InputPath))
             {
@@ -61,9 +65,13 @@ namespace swingor_processors
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
         // exclusions: processor-specific list of patterns of files to ignore.
-        public static void ProcessStaticFiles(DirectoryToProcess directory, List<string> exclusions)
+        public static void ProcessStaticFiles(DirectoryToProcess directory)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
+            var exclusions = (from p in directory.Processors
+                              where p.Class == $"{typeof(BasicProcessors)}" &&
+                                    p.Method == nameof(ProcessStaticFiles)
+                              select p.Exclusions).FirstOrDefault() ?? new List<string>();
 
             if (Directory.Exists(directory.InputPath))
             {

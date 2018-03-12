@@ -14,9 +14,13 @@ namespace swingor_sitemap
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
         // exclusions: processor-specific list of patterns of files to ignore.
-        public static void ProcessSitemap(DirectoryToProcess directory, List<string> exclusions)
+        public static void ProcessSitemap(DirectoryToProcess directory)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
+            var exclusions = (from p in directory.Processors
+                              where p.Class == $"{typeof(Sitemap)}" &&
+                                    p.Method == nameof(ProcessSitemap)
+                              select p.Exclusions).FirstOrDefault() ?? new List<string>();
 
             if (Directory.Exists(directory.OutputPath))
             {

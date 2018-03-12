@@ -17,9 +17,15 @@ namespace swingor_rss
         // output directory and the processor (transformation) to use.
         // exclusions: processor-specific list of patterns of files to ignore.
         // stopAfter: number of files to process.
-        public static void ProcessRSSFeed(DirectoryToProcess directory, List<string> exclusions, int? stopAfter)
+        public static void ProcessRSSFeed(DirectoryToProcess directory)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
+            var myConfig = (from p in directory.Processors
+                            where p.Class == $"{typeof(RSS)}" &&
+                                  p.Method == nameof(ProcessRSSFeed)
+                            select p).FirstOrDefault() ?? new Processor();
+            var exclusions = myConfig.Exclusions;
+            var stopAfter = myConfig.StopAfter;
 
             if (Directory.Exists(directory.OutputPath))
             {

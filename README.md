@@ -35,14 +35,24 @@ files, and with each other.
 Adding directories and processors to those directories is as easy as updating the
 `appsettings.json` file. See the `Configuration` section below for details. Note that
 the processors can be located in any assembly, and are defined by a method signature of
-`public static void ProcessorName(DirectoryToProcess directory, List<string> exclusions, int? stopAfter)`.
-The `stopAfter` parameter is optional.
+`public static void ProcessorName(DirectoryToProcess directory)`. Processors can pull
+their processor-specific configurations out of the `directory` parameter easily, e.g,
+in the RSS processor:
+
+```cs
+var myConfig = (from p in directory.Processors
+                where p.Class == $"{typeof(RSS)}" &&
+                      p.Method == nameof(ProcessRSSFeed)
+                select p).FirstOrDefault() ?? new Processor();
+var exclusions = myConfig.Exclusions;
+var stopAfter = myConfig.StopAfter;
+```
 
 See the default processor implementations for details:
 
 * `BasicProcessors.ProcessMarkdownFiles` - processes Markdown files and produces HTML output
   files.
-  
+
 * `BasicProcessors.ProcessStaticFiles` - processes any "static" input files by copying them
   to the output directory specified.
 
@@ -170,8 +180,7 @@ above.
 
 * **AppConfiguration:DirectoriesToProcess:Processors:Method** - the method that implements
   the processor ("Where the rubber meets the road"). The method signature should be
-  `public static void ProcessorName(DirectoryToProcess directory, List<string> exclusions, int? stopAfter)`.
-  The `stopAfter` parameter is optional.
+  `public static void ProcessorName(DirectoryToProcess directory)`.
 
 * **AppConfiguration:DirectoriesToProcess:Processors:StopAfter** - optional processor-specific
   integer of the number of files to process (in other words, stop **after** this many files are
