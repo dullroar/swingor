@@ -154,17 +154,6 @@ above.
 
 * **AppConfiguration:DirectoriesToProcess:OutputPath** - path to output directory.
 
-* **AppConfiguration:DirectoriesToProcess:Postpends** - an array of file names to be
-  concatenated after the generated file, in order, after the rest of the contents. For Markdown,
-  this is used to define things like the `<footer>` element, script blocks and the like.
-  For other processors in the futue, it could be used for other things (like adding
-  metadata to generated images).
-
-* **AppConfiguration:DirectoriesToProcess:Prepends** - an array of file names to be
-  concatenated before the generated file, in order. For Markdown, this is used to define things
-  like contents of the `<head>` element. For other processors in the future, it could
-  be used for other things (like prepending a copyright comment to every script file).
-
 * **AppConfiguration:DirectoriesToProcess:Processors** - array of processors to invoke, in
   order, for a given input directory. See `Processor.cs`.
 
@@ -182,9 +171,24 @@ above.
   the processor ("Where the rubber meets the road"). The method signature should be
   `public static void ProcessorName(DirectoryToProcess directory)`.
 
+* **AppConfiguration:DirectoriesToProcess:Processors:Postpends** - a processor-specific array of
+  file names to be concatenated after the generated file, in order, after the rest of the contents.
+  For Markdown, this is used to define things like the `<footer>` element, script blocks and the like.
+  For other processors in the futue, it could be used for other things (like adding metadata to
+  generated images).
+
+* **AppConfiguration:DirectoriesToProcess:Processors:Prepends** - a processor-specifc array of
+  file names to be concatenated before the generated file, in order. For Markdown, this is used
+  to define things like contents of the `<head>` element. For other processors in the future, it could
+  be used for other things (like prepending a copyright comment to every script file).
+
 * **AppConfiguration:DirectoriesToProcess:Processors:StopAfter** - optional processor-specific
   integer of the number of files to process (in other words, stop **after** this many files are
   processed). Useful for things like RSS feeds.
+
+* **AppConfiguration:DirectoriesToProcess:Processors:Wildcards** - processor-specific array of wildcards
+  to use to select files in the input directory to process, e.g.,
+  `"Wildcards": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`
 
 * **AppConfiguration:DirectoriesToProcess:SiteDescription** - optional string to use for containing
   a site description (for RSS feeds, etc.)
@@ -194,9 +198,6 @@ above.
 
 * **AppConfiguration:DirectoriesToProcess:TargetURL** - optional string containing the target
   URL the files will be served from, e.g., `"TargetURL" : "https://foo.com"`.
-
-* **AppConfiguration:DirectoriesToProcess:Wildcard** - array of wildcards to use to select
-  files in the input directory to process, e.g., `"Wildcard": [ "*.gif", "*.jp*g", "*.png", "*.tif*" ]`
 
 ## TODO
 

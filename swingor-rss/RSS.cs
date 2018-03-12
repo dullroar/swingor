@@ -15,8 +15,6 @@ namespace swingor_rss
         // input files and just makes assumptions about the output.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        // exclusions: processor-specific list of patterns of files to ignore.
-        // stopAfter: number of files to process.
         public static void ProcessRSSFeed(DirectoryToProcess directory)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
@@ -24,7 +22,6 @@ namespace swingor_rss
                             where p.Class == $"{typeof(RSS)}" &&
                                   p.Method == nameof(ProcessRSSFeed)
                             select p).FirstOrDefault() ?? new Processor();
-            var exclusions = myConfig.Exclusions;
             var stopAfter = myConfig.StopAfter;
 
             if (Directory.Exists(directory.OutputPath))
@@ -42,10 +39,10 @@ namespace swingor_rss
         <ttl>1800</ttl>'
 ");
                 var inputDir = new DirectoryInfo(directory.InputPath);
-                directory.Wildcard.ForEach(wc =>
+                myConfig.Wildcards.ForEach(wc =>
                 {
                     (from fi in inputDir.EnumerateFileSystemInfos(wc, SearchOption.AllDirectories)
-                     where !exclusions.Contains(fi.Name)
+                     where !myConfig.Exclusions.Contains(fi.Name)
                      select fi)
                     .OrderByDescending(fi => fi.LastWriteTimeUtc)
                     .Take(stopAfter.HasValue && stopAfter.Value > 0 ? stopAfter.Value : int.MaxValue)

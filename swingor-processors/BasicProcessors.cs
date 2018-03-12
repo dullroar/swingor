@@ -17,24 +17,23 @@ namespace swingor_processors
         // each other.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        // exclusions: processor-specific list of patterns of files to ignore.
         public static void ProcessMarkdownFiles(DirectoryToProcess directory)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
-            var exclusions = (from p in directory.Processors
-                              where p.Class == $"{typeof(BasicProcessors)}" &&
-                                    p.Method == nameof(ProcessMarkdownFiles)
-                              select p.Exclusions).FirstOrDefault() ?? new List<string>();
+            var myConfig = (from p in directory.Processors
+                            where p.Class == $"{typeof(BasicProcessors)}" &&
+                                  p.Method == nameof(ProcessMarkdownFiles)
+                            select p).FirstOrDefault() ?? new Processor();
 
             if (Directory.Exists(directory.InputPath))
             {
                 var normalizedPath = Path.GetFullPath(directory.InputPath);
                 var pipeline = new MarkdownPipelineBuilder().UseYamlFrontMatter().UseAdvancedExtensions().Build();
 
-                Parallel.ForEach(directory.Wildcard, wc =>
+                Parallel.ForEach(myConfig.Wildcards, wc =>
                 {
                     Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories)
-                                              .Except(exclusions.Select(e => Path.Combine(normalizedPath, e))), inputFileName =>
+                                              .Except(myConfig.Exclusions.Select(e => Path.Combine(normalizedPath, e))), inputFileName =>
                     {
                         var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
                         var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
@@ -47,11 +46,11 @@ namespace swingor_processors
                             !File.Exists(outputFileName))
                         {
                             var outputText = new StringBuilder();
-                            directory.Prepends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
+                            myConfig.Prepends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
                             var fileText = File.ReadAllText(inputFileName);
                             var meta = ParseYAML(fileText, directory.DefaultAuthor, directory.DefaultTitle);
                             outputText.Append(Markdown.ToHtml(fileText, pipeline));
-                            directory.Postpends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
+                            myConfig.Postpends.ForEach(file => outputText.Append(File.ReadAllText(Path.Combine(directory.InputPath, file))));
                             ReplaceTemplatesWithMetadata(outputText, meta);
                             File.WriteAllText(outputFileName, outputText.ToString());
                         }
@@ -64,23 +63,22 @@ namespace swingor_processors
         // in parallel and hence should be autonomous from each other.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
-        // exclusions: processor-specific list of patterns of files to ignore.
         public static void ProcessStaticFiles(DirectoryToProcess directory)
         {
             directory = directory ?? throw new ArgumentNullException(nameof(directory));
-            var exclusions = (from p in directory.Processors
-                              where p.Class == $"{typeof(BasicProcessors)}" &&
-                                    p.Method == nameof(ProcessStaticFiles)
-                              select p.Exclusions).FirstOrDefault() ?? new List<string>();
+            var myConfig = (from p in directory.Processors
+                            where p.Class == $"{typeof(BasicProcessors)}" &&
+                                  p.Method == nameof(ProcessStaticFiles)
+                            select p).FirstOrDefault() ?? new Processor();
 
             if (Directory.Exists(directory.InputPath))
             {
                 var normalizedPath = Path.GetFullPath(directory.InputPath);
 
-                Parallel.ForEach(directory.Wildcard, wc =>
+                Parallel.ForEach(myConfig.Wildcards, wc =>
                 {
                     Parallel.ForEach(Directory.EnumerateFiles(normalizedPath, wc, SearchOption.AllDirectories)
-                                              .Except(exclusions.Select(e => Path.Combine(normalizedPath, e))), inputFileName =>
+                                              .Except(myConfig.Exclusions.Select(e => Path.Combine(normalizedPath, e))), inputFileName =>
                     {
                         var subdirectory = GetSubdirectory(normalizedPath, Path.GetDirectoryName(inputFileName));
                         var outputDirectory = Path.Combine(directory.OutputPath, subdirectory);
