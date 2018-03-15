@@ -56,6 +56,9 @@ See the default processor implementations for details:
 * `BasicProcessors.ProcessStaticFiles` - processes any "static" input files by copying them
   to the output directory specified.
 
+* `ImageProcessor.ProcessImageExifs` - adds copyright notice to image EXIF metadata if
+  missing.
+
 * `RSS.ProcessRSSFeed` - processes Markdown files and produces an RSS feed for the resulting
   HTML files.
 
@@ -76,7 +79,10 @@ is passed exclusions and doesn't know what to do with them, they will be ignored
 Uses the following non-Microsoft packages:
 
 * [markdig](https://github.com/lunet-io/markdig) - converts Markdown to other formats.
-  Really well done work.
+  Really well done work. BSD license.
+
+* [ImageSharp](https://github.com/SixLabors/ImageSharp) - image processing in managed code.
+  Apache license.
 
 ## How to Use
 

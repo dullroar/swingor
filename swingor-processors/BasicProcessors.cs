@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace swingor_processors
 {
-    public class BasicProcessors
+    public class BasicProcessors : BaseProcessor
     {
         // Process Markdown files. These are done in parallel and hence should be autonomous from
         // each other.
@@ -95,18 +95,6 @@ namespace swingor_processors
                     });
                 });
             }
-        }
-
-        // Pull out the remaining subdirectory path, removing any "original
-        // directory" prefix.
-        // originalPath: the path to extract from.
-        // newPath: the portion of the path to extract.
-        // Returns the extracted path.
-        public static string GetSubdirectory(string originalPath, string newPath)
-        {
-            var normalizedOriginalPath = Path.GetFullPath(originalPath);
-            var normalizedNewPath = Path.GetFullPath(newPath);
-            return newPath.StartsWith(originalPath) ? newPath.Remove(0, originalPath.Length) : "";
         }
 
         // Quick and dirty INCOMPLETE YAML "parser" meant to extract VERY simple

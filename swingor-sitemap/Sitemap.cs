@@ -7,7 +7,7 @@ using System.Text;
 
 namespace swingor_sitemap
 {
-    public class Sitemap
+    public class Sitemap : BaseProcessor
     {
         // Create sitemap.xml file from HTML files in output directory. Obviously, this
         // needs to go after the processor that creates the HTML files.

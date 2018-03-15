@@ -8,7 +8,7 @@ using System.Text;
 
 namespace swingor_rss
 {
-    public class RSS
+    public class RSS : BaseProcessor
     {
         // Create rss.xml file from HTML files in output directory. This should typically
         // go after the processor that creates the HTML files, although it works off the
