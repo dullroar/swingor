@@ -17,6 +17,8 @@ namespace swingor_image
     {
         // Recursively add copyright info to the EXIF metadata. These are done
         // in parallel and hence should be autonomous from each other.
+        // Note that this processes files in the output directory, and does NOT update
+        // the original input files.
         // directory: information about the directory to process, e.g., input directory,
         // output directory and the processor (transformation) to use.
         public static void ProcessImageExifs(DirectoryToProcess directory)
@@ -27,7 +29,7 @@ namespace swingor_image
                                   p.Method == nameof(ProcessImageExifs)
                             select p).FirstOrDefault() ?? new Processor();
 
-            if (Directory.Exists(directory.InputPath))
+            if (Directory.Exists(directory.OutputPath))
             {
                 var normalizedPath = Path.GetFullPath(directory.OutputPath);
 
