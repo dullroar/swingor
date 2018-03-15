@@ -9,6 +9,22 @@ can also be parallelized if it fits what is being done.
 Written in C# using .NET Core. Built and tested on Linux, but should run
 anywhere .NET Core is supported.
 
+## Terminology
+
+* **Directory** - actually a directory pair, input and output. **Note:** The general
+  design philosophy is that the files in the "original" input directory should **never**
+  be changed by the processing. In other words, you should be able to repeatedly run with
+  the same configuration and achieve the same results. However, given that it is somewhat
+  of a "pipeline," for some processors meant to be invoked further down the pipeline, the
+  input and output directories may be the same, e.g., adding EXIF metadata to a series of
+  image files that have already been copied to the output directory.
+
+* **Processor** - a method in an assembly invoked by reflection based on the contents of
+  the configuration, that processes the input directory files and produces files to the
+  output directory.
+
+## Overview
+
 Right now, the processing is pretty simple - Markdown files get processed to HTML,
 everything else is flat copied to the output location. But by having the pipeline processors
 in collections all of the following is possible:
@@ -204,10 +220,6 @@ above.
 
 * **AppConfiguration:DirectoriesToProcess:TargetURL** - optional string containing the target
   URL the files will be served from, e.g., `"TargetURL" : "https://foo.com"`.
-
-## TODO
-
-* Move Prepends and Postpends to be processor-specific configuration settings.
 
 ## Known Bugs
 
