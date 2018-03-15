@@ -15,6 +15,8 @@ namespace swingor
         
         // Class to load.
         public string Class { get; set; }
+        // Path to optional config file for this processor.
+        public string ConfigFilePath { get; set; }
         // Path to assembly DLL to load.
         public string DLL { get; set; }
         // File names or patterns to ignore.

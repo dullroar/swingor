@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\swingor\swingor.csproj" />
+    <PackageReference Include="markdig" Version="0.14.8" />
   </ItemGroup>
 
 </Project>

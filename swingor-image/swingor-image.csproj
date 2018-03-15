@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\swingor\swingor.csproj" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-dev000893" />
+  </ItemGroup>
+</Project>
