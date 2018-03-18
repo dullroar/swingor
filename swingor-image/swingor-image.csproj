@@ -5,6 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\swingor\swingor.csproj" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-dev000893" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0001" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta0001" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0001" />
   </ItemGroup>
 </Project>

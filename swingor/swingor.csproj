@@ -15,7 +15,9 @@
     <PackageReference Include="microsoft.extensions.configuration.commandline" Version="2.0.0" />
     <PackageReference Include="microsoft.extensions.configuration.environmentvariables" Version="2.0.0" />
     <PackageReference Include="microsoft.extensions.configuration.json" Version="2.0.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-dev000893" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0001" />
+    <PackageReference Include="SixLabors.Fonts" Version="1.0.0-beta0001" />
+    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta0001" />
   </ItemGroup>
 
 </Project>
