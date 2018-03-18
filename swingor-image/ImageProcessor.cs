@@ -73,7 +73,8 @@ namespace swingor_image
                             where p.Class == $"{typeof(ImageProcessor)}" &&
                                   p.Method == nameof(AddWatermark)
                             select p).FirstOrDefault() ?? new Processor();
-            var font = SystemFonts.CreateFont("Ubuntu", 10);
+            var procConfig = GetConfiguration<swingor_image.ProcessorConfiguration>(myConfig.ConfigFilePath, "ProcessorConfiguration");
+            var font = SystemFonts.CreateFont(procConfig.Font, procConfig.FontSize);
 
             if (Directory.Exists(directory.OutputPath))
             {
@@ -89,9 +90,8 @@ namespace swingor_image
                             if (img.MetaData.ExifProfile != null && img.MetaData.ExifProfile.GetValue(ExifTag.Copyright) != null)
                             {
                                 using (var img2 = img.Clone(ctx =>
-                                                            ctx.ApplyScalingWaterMarkSimple(font,
-                                                                                            $"© {img.MetaData.ExifProfile.GetValue(ExifTag.Copyright).Value.ToString()}",
-                                                                                            Rgba32.HotPink, 5)))
+                                                            ctx.ApplyScalingWaterMarkSimple(font, Rgba32.HotPink, 5, procConfig.ScalingFactor,
+                                                                                            $"© {img.MetaData.ExifProfile.GetValue(ExifTag.Copyright).Value.ToString()}")))
                                 {
                                     img2.Save(imgFileName);
                                 };
@@ -120,13 +120,13 @@ namespace swingor_image
         }
 
         // From https://github.com/SixLabors/Samples/blob/master/ImageSharp/DrawWaterMarkOnImage/Program.cs
-        public static IImageProcessingContext<TPixel> ApplyScalingWaterMarkSimple<TPixel>(this IImageProcessingContext<TPixel> processingContext, Font font, string text, TPixel color, float padding)
+        public static IImageProcessingContext<TPixel> ApplyScalingWaterMarkSimple<TPixel>(this IImageProcessingContext<TPixel> processingContext, Font font, TPixel color, float padding, int scalingFactor, string text)
             where TPixel : struct, IPixel<TPixel>
         {
             return processingContext.Apply(img =>
             {
                 SizeF size = TextMeasurer.Measure(text, new RendererOptions(font));
-                Font scaledFont = new Font(font, Math.Min(img.Width, img.Height) / 100 * font.Size);
+                Font scaledFont = new Font(font, Math.Min(img.Width, img.Height) / scalingFactor * font.Size);
                 var pos = new PointF(img.Width - padding, img.Height - padding);
                 img.Mutate(i => i.DrawText(text, scaledFont, color, pos, new TextGraphicsOptions(true)
                 {

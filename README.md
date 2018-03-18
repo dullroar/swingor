@@ -21,7 +21,9 @@ anywhere .NET Core is supported.
 
 * **Processor** - a method in an assembly invoked by reflection based on the contents of
   the configuration, that processes the input directory files and produces files to the
-  output directory.
+  output directory. **Note:** It is not mandatory that a processor class inherit from it,
+  but there is a `BaseProcessor` base class in the `swingor` project that contains some
+  useful utility methods.
 
 ## Overview
 
@@ -74,6 +76,9 @@ See the default processor implementations for details:
 
 * `ImageProcessor.ProcessImageExifs` - adds copyright notice to image EXIF metadata if
   missing.
+
+* `ImageProcessor.AddWatermark` - adds copyright watermark to image if image has copyright text
+  in its EXIF metadata.
 
 * `RSS.ProcessRSSFeed` - processes Markdown files and produces an RSS feed for the resulting
   HTML files.
@@ -181,6 +186,13 @@ above.
 
 * **AppConfiguration:DirectoriesToProcess:Processors:Class** - class in assembly
   containing processor.
+
+* **AppConfiguration:DirectoriesToProcess:Processors:ConfigFilePath** - location of a
+  processor-specific config file. Each processor can have its own config file, and
+  the data in it is independent of all the other processors. See `BaseProcessor.GetConfiguration`
+  for how it is retrieved, and `ImageProcessor.AddWatermark` for an example of how
+  it is used to load the processor-specific `ProcessorConfiguration` class in the
+  `swingor-image` project.
 
 * **AppConfiguration:DirectoriesToProcess:Processors:DLL** - path to DLL of assembly
   containing processor.
